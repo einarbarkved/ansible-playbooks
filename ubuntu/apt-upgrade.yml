@@ -16,6 +16,20 @@
         path: /var/run/reboot-required
       register: reboot_required
 
+      # Send email
+    - name: Sending an e-mail using Resend servers
+      community.general.mail:
+        host: smtp.resend.com
+        port: 587
+        username: resend
+        password: "{{ resend_token }}"
+        to: Einar Barkved <einar.barkved@gmail.com>
+        from: ansible@byggport.no (Ansible)
+        subject: Ansible-report
+        body: '{"content": "Reboot required on {{ inventory_hostname }}"}'
+      delegate_to: localhost
+      #when: reboot_required.stat.exists
+
     # Send Discord message when reboot is required
     # - name: Send Discord message
     #   uri:
