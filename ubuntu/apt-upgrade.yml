@@ -27,7 +27,7 @@
         from: ansible@byggport.no (Ansible)
         subject: Ansible-report
         body: '{"content": "Reboot required on {{ inventory_hostname }}"}'
-      delegate_to: localhost
+      #delegate_to: localhost
       #when: reboot_required.stat.exists
 
     # Send Discord message when reboot is required
