@@ -3,11 +3,11 @@
   become: yes
   tasks:
     # Upgrade packages
-    # - name: upgrade apt packages
-    #   become: true
-    #   apt:
-    #     upgrade: yes
-    #     update_cache: yes
+    - name: upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
 
     # Check if reboot is required
     - name: check if system reboot is required
@@ -23,12 +23,12 @@
         port: 587
         username: resend
         password: "{{ resend_token }}"
-        to: Einar Barkved <einar.barkved@gmail.com>
-        from: ansible@byggport.no (Ansible)
-        subject: Ansible-report
-        body: '{"content": "Reboot required on {{ inventory_hostname }}"}'
+        to: "{{ to_mail }}"
+        from: "{{ from_mail }}"
+        subject: Ansible Report
+        body: "Reboot required on {{ inventory_hostname }}"
       #delegate_to: localhost
-      #when: reboot_required.stat.exists
+      when: reboot_required.stat.exists
 
     # Send Discord message when reboot is required
     # - name: Send Discord message
