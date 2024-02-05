@@ -1,0 +1,24 @@
+- hosts: all
+
+  tasks:
+    - name: Get disk usage
+      command: df -h
+      register: disk_usage
+
+    - name: Check disk space available
+      shell: df -h / | awk 'NR==2 {print $5}'
+      register: disk_usage
+
+    # Send email
+    - name: Sending an e-mail using Resend servers
+      community.general.mail:
+        host: smtp.resend.com
+        port: 587
+        username: resend
+        password: "{{ resend_token }}"
+        to: "{{ to_mail }}"
+        from: "{{ from_mail }}"
+        subject: Ansible Report
+        body: "Disk space on {{ inventory_hostname }} is above 80%!"
+      #delegate_to: localhost
+      when: disk_usage.stdout[:-1]|int > 80
